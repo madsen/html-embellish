@@ -94,10 +94,12 @@ sub curlyquote
   s/^"/$ldquo/;
   s/(?<=\s)"(?=\S)/$ldquo/g;
   s/(?<=\pP)"(?=\w)/$ldquo/g;
+  s/\("/($ldquo/g;
 
   s/"$/$rdquo/;
   s/(?<!\s)"(?=\s)/$rdquo/g;
   s/(?<=\w)"(?=\pP)/$rdquo/g;
+  s/"\)/$rdquo)/g;
 
   s/'(?=(?:em|tis|twas)\b)/$rsquo/g;
 
@@ -114,8 +116,8 @@ sub curlyquote
   s/(?<!\S)"([\xA0\s]+$lsquo)/$ldquo$1/go;
   s/(${rsquo}[\xA0\s]+)"(?!\S)/$1$rdquo/go;
 
-  s/${ldquo}[\xA0\s]$lsquo/$ldquo\x{202F}$lsquo/g;
-  s/${rsquo}[\xA0\s]$rdquo/$rsquo\x{202F}$rdquo/g;
+  s/${ldquo}\s$lsquo/$ldquo\xA0$lsquo/g;
+  s/${rsquo}\s$rdquo/$rsquo\xA0$rdquo/g;
 
   # Return the text to where it came from:
   #   This only works because the replacement text is always
@@ -124,8 +126,8 @@ sub curlyquote
     $$r = substr($_, 0, length($$r), '');
     # Since the replacement text isn't the same length,
     # these can't be done on the string as a whole:
-    $$r =~ s/$ldquo$lsquo/$ldquo\x{202F}$lsquo/g;
-    $$r =~ s/$rsquo$rdquo/$rsquo\x{202F}$rdquo/g;
+    $$r =~ s/$ldquo$lsquo/$ldquo\xA0$lsquo/g;
+    $$r =~ s/$rsquo$rdquo/$rsquo\xA0$rdquo/g;
   } # end foreach @$refs
 } # end curlyquote
 
