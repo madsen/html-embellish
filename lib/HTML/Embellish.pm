@@ -99,27 +99,31 @@ sub curlyquote
 
   local $_ = join('', map { $$_ } @$refs);
 
-  s/^"/$ldquo/;
-  s/(?<=\s)"(?=\S)/$ldquo/g;
+  s/^[\xA0\s]*"/$ldquo/;
+  s/(?<=[\s\pZ])"(?=[^\s\pZ])/$ldquo/g;
   s/(?<=\pP)"(?=\w)/$ldquo/g;
+  s/(?<=[ \t\n\r])"(?=\xA0)/$ldquo/g;
   s/\("/($ldquo/g;
 
-  s/"$/$rdquo/;
-  s/(?<!\s)"(?=\s)/$rdquo/g;
+  s/"[\xA0\s]*$/$rdquo/;
+  s/(?<![\s\pZ])"(?=[\s\pZ])/$rdquo/g;
   s/(?<=\w)"(?=\pP)/$rdquo/g;
+  s/(?<=\xA0)"(?=[ \t\n\r]|[\s\xA0]+$)/$rdquo/g;
   s/"\)/$rdquo)/g;
+  s/(?<=[,;.!?])"(?=[-$mdash])/$rdquo/go;
 
-  s/'(?=(?:em|tis|twas)\b)/$rsquo/ig;
+  s/'(?=(?:em?|tisn?|twas)\b)/$rsquo/ig;
 
   s/`/$lsquo/g;
   s/^'/$lsquo/;
-  s/(?<=\s)'(?=\S)/$lsquo/g;
+  s/(?<=[\s\pZ])'(?=[^\s\pZ])/$lsquo/g;
   s/(?<=\pP)(?<![.!?])'(?=\w)/$lsquo/g;
+  s/(?<=[ \t\n\r])'(?=\xA0)/$lsquo/g;
 
   s/'/$rsquo/g;
 
-  s/(?<!\S)"([\xA0\s]+$lsquo)/$ldquo$1/go;
-  s/(${rsquo}[\xA0\s]+)"(?!\S)/$1$rdquo/go;
+  s/(?<!\PZ)"([\xA0\s]+$lsquo)/$ldquo$1/go;
+  s/(${rsquo}[\xA0\s]+)"(?!\PZ)/$1$rdquo/go;
 
   s/${ldquo}\s$lsquo/$ldquo\xA0$lsquo/g;
   s/${rsquo}\s$rdquo/$rsquo\xA0$rdquo/g;
@@ -131,8 +135,9 @@ sub curlyquote
     $$r = substr($_, 0, length($$r), '');
     # Since the replacement text isn't the same length,
     # these can't be done on the string as a whole:
-    $$r =~ s/$ldquo$lsquo/$ldquo\xA0$lsquo/g;
-    $$r =~ s/$rsquo$rdquo/$rsquo\xA0$rdquo/g;
+    $$r =~ s/(?<=[$ldquo$rdquo])(?=[$lsquo$rsquo])/\xA0/go;
+    $$r =~ s/(?<=[$lsquo$rsquo])(?=[$ldquo$rdquo])/\xA0/go;
+    $$r =~ s/(?<=[$ldquo$lsquo])\xA0(?=\.\xA0\.)//go;
   } # end foreach @$refs
 } # end curlyquote
 
@@ -143,7 +148,7 @@ sub process
 {
   my ($self, $elt) = @_;
 
-  my $isP = ($elt->tag eq 'p');
+  my $isP = ($elt->tag =~ /^(?: p | h\d | d[dt] )$/x);
 
   ++$self->[parDepth] if $isP;
 
