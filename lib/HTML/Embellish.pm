@@ -39,6 +39,9 @@ my $rsquo = chr(0x2019);
 my $ldquo = chr(0x201C);
 my $rdquo = chr(0x201D);
 
+my $notQuote = qq/[^\"$ldquo$rdquo]/;
+my $balancedQuoteString = qq/(?: $notQuote | $ldquo $notQuote* $rdquo)*/;
+
 #=====================================================================
 # Constants:
 #---------------------------------------------------------------------
@@ -125,8 +128,11 @@ sub curlyquote
   s/(?<!\PZ)"([\xA0\s]+$lsquo)/$ldquo$1/go;
   s/(${rsquo}[\xA0\s]+)"(?!\PZ)/$1$rdquo/go;
 
-  s/${ldquo}\s$lsquo/$ldquo\xA0$lsquo/g;
-  s/${rsquo}\s$rdquo/$rsquo\xA0$rdquo/g;
+  1 while s/^($balancedQuoteString (?![\"$ldquo$rdquo])[ \t\n\r\pP]) "/$1$ldquo/xo
+      or  s/^($balancedQuoteString $ldquo $notQuote*) "/$1$rdquo/xo;
+
+  s/${ldquo}\s([$lsquo$rsquo])/$ldquo\xA0$1/go;
+  s/${rsquo}\s$rdquo/$rsquo\xA0$rdquo/go;
 
   # Return the text to where it came from:
   #   This only works because the replacement text is always
@@ -152,7 +158,16 @@ sub process
 
   ++$self->[parDepth] if $isP;
 
-  foreach my $r ($elt->content_refs_list) {
+  my @content = $elt->content_refs_list;
+
+  if ($self->[fixQuotes] and $self->[parDepth] and @content) {
+    # A " that opens a tag can be assumed to be a left quote
+    ${$content[ 0]} =~ s/^"/$ldquo/ unless ref ${$content[ 0]};
+    # A " that ends a tag can be assumed to be a right quote
+    ${$content[-1]} =~ s/"$/$rdquo/ unless ref ${$content[-1]};
+  }
+
+  foreach my $r (@content) {
     if (ref $$r) {
       if ($self->[parDepth] and $$r->tag eq 'br') {
         my $break = "\n";
