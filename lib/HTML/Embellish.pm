@@ -168,13 +168,16 @@ sub process
   }
 
   foreach my $r (@content) {
-    if (ref $$r) {
-      if ($self->[parDepth] and $$r->tag eq 'br') {
+    if (ref $$r) { # element node
+      my $tag = $$r->tag;
+      next if $tag =~ /^(?: ~comment | script | style )$/x;
+
+      if ($self->[parDepth] and $tag eq 'br') {
         my $break = "\n";
         push @{$self->[textRefs]}, \$break;
       }
       $self->process($$r);
-    } else {
+    } else { # text node
       # Convert -- to em-dash:
       if ($self->[fixDashes]) {
         $$r =~ s/(?<!-)---?(?!-)/$mdash/g; # &mdash;
