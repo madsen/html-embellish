@@ -102,7 +102,7 @@ sub curlyquote
 
   local $_ = join('', map { $$_ } @$refs);
 
-  s/^[\xA0\s]*"/$ldquo/;
+  s/^([\xA0\s]*)"/$1$ldquo/;
   s/(?<=[\s\pZ])"(?=[^\s\pZ])/$ldquo/g;
   s/(?<=\pP)"(?=\w)/$ldquo/g;
   s/(?<=[ \t\n\r])"(?=\xA0)/$ldquo/g;
