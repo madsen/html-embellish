@@ -1,9 +1,9 @@
 #---------------------------------------------------------------------
 package HTML::Embellish;
 #
-# Copyright 2006 Christopher J. Madsen
+# Copyright 2007 Christopher J. Madsen
 #
-# Author: Christopher J. Madsen <cjm@pobox.com>
+# Author: Christopher J. Madsen <perl@cjmweb.net>
 # Created: October 8, 2006
 # $Id$
 #
@@ -18,17 +18,17 @@ package HTML::Embellish;
 # Typographically enhance HTML trees
 #---------------------------------------------------------------------
 
-use 5.006;
+use 5.008;                      # Need good Unicode support
 use warnings;
 use strict;
 #use Carp;
 
-require Exporter;
+use Exporter ();
 
 #=====================================================================
 # Package Global Variables:
 
-our $VERSION = '0.01';
+our $VERSION = '0.01';  # Also update VERSION section in documentation
 
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(embellish);
@@ -217,6 +217,7 @@ HTML::Embellish - Typographically enhance HTML trees
 
 This document describes HTML::Embellish version 0.01
 
+
 =head1 SYNOPSIS
 
     use HTML::Embellish;
@@ -293,8 +294,8 @@ HTML::Embellish requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-Requires the HTML::Tree distribution from CPAN (or some other module
-that implements the HTML::Element interface).  Versions of HTML::Tree
+Requires the L<HTML::Tree> distribution from CPAN (or some other module
+that implements the L<HTML::Element> interface).  Versions of HTML::Tree
 prior to 3.21 had some bugs involving Unicode characters and
 non-breaking spaces.
 
@@ -302,23 +303,25 @@ non-breaking spaces.
 
 None reported.
 
+
 =head1 BUGS AND LIMITATIONS
 
 No bugs have been reported.
 
-Please report any bugs or feature requests to
-C<bug-html-embellish@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.
-
 
 =head1 AUTHOR
 
-Christopher J. Madsen  C<< <cjm@pobox.com> >>
+Christopher J. Madsen  C<< <perl AT cjmweb.net> >>
+
+Please report any bugs or feature requests to
+S<< C<< <bug-HTML-Embellish AT rt.cpan.org> >> >>,
+or through the web interface at
+L<http://rt.cpan.org/Public/Bug/Report.html?Queue=HTML-Embellish>
 
 
-=head1 LICENCE AND COPYRIGHT
+=head1 LICENSE AND COPYRIGHT
 
-Copyright 2006, Christopher J. Madsen C<< <cjm@pobox.com> >>. All rights reserved.
+Copyright 2007 Christopher J. Madsen
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.
@@ -338,7 +341,7 @@ NECESSARY SERVICING, REPAIR, OR CORRECTION.
 
 IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
 WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE
+REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENSE, BE
 LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL,
 OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE
 THE SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
