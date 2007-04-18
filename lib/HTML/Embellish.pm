@@ -115,7 +115,7 @@ sub curlyquote
   s/"\)/$rdquo)/g;
   s/(?<=[,;.!?])"(?=[-$mdash])/$rdquo/go;
 
-  s/'(?=(?:em?|tisn?|twas)\b)/$rsquo/ig;
+  s/'(?=(?:em?|til|tisn?|twas)\b|\d\d\W?s)/$rsquo/ig;
 
   s/`/$lsquo/g;
   s/^'/$lsquo/;
@@ -189,7 +189,7 @@ sub process
         $$r =~ s/(?<!\.)\.\.\.([.?!;:,])(?!\.)/.\xA0.\xA0.\xA0$1/g;
         $$r =~ s/(?<!\.)\.\.\.(?!\.)/.\xA0.\xA0./g;
         $$r =~ s/\. (?=[,.?!])/.\xA0/g;
-        $$r =~ s/(?:(?<=\w)|\A) (\.\xA0\.\xA0\.|\.\.\.)(?=[ \xA0\n\"\'?!])(?![ \xA0\n]+\w)/\xA0$1/g;
+        $$r =~ s/(?:(?<=\w)|\A) (\.\xA0\.\xA0\.|\.\.\.)(?=[ \xA0\n\"\'?!$rsquo$rdquo])(?![ \xA0\n]+\w)/\xA0$1/go;
       } # end if fixEllipses
 
       push @{$self->[textRefs]}, $r if $self->[parDepth];
