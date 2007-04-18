@@ -49,7 +49,7 @@ my $balancedQuoteString = qq/(?: $notQuote | $ldquo $notQuote* $rdquo)*/;
 BEGIN
 {
   my $i = 0;
-  for (qw(parDepth textRefs fixQuotes fixDashes fixEllipses totalFields)) {
+  for (qw(textRefs fixQuotes fixDashes fixEllipses totalFields)) {
     ## no critic (ProhibitStringyEval)
     eval "sub $_ () { $i }";
     ++$i;
@@ -80,8 +80,7 @@ sub new
 
   my $def = (exists $parms{default} ? $parms{default} : 1);
 
-  $self->[parDepth]    = 0;
-  $self->[textRefs]    = [];
+  $self->[textRefs]    = undef;
   $self->[fixDashes]   = (exists $parms{dashes}   ? $parms{dashes}   : $def);
   $self->[fixEllipses] = (exists $parms{ellipses} ? $parms{ellipses} : $def);
   $self->[fixQuotes]   = (exists $parms{quotes}   ? $parms{quotes}   : $def);
@@ -154,13 +153,13 @@ sub process
 {
   my ($self, $elt) = @_;
 
-  my $isP = ($elt->tag =~ /^(?: p | h\d | d[dt] )$/x);
+  my $isP = ($elt->tag =~ /^(?: p | h\d | d[dt] | div | blockquote )$/x);
 
-  ++$self->[parDepth] if $isP;
+  $self->[textRefs] = [] if $isP;
 
   my @content = $elt->content_refs_list;
 
-  if ($self->[fixQuotes] and $self->[parDepth] and @content) {
+  if ($self->[fixQuotes] and $self->[textRefs] and @content) {
     # A " that opens a tag can be assumed to be a left quote
     ${$content[ 0]} =~ s/^"/$ldquo/ unless ref ${$content[ 0]};
     # A " that ends a tag can be assumed to be a right quote
@@ -172,7 +171,7 @@ sub process
       my $tag = $$r->tag;
       next if $tag =~ /^(?: ~comment | script | style )$/x;
 
-      if ($self->[parDepth] and $tag eq 'br') {
+      if ($self->[textRefs] and $tag eq 'br') {
         my $break = "\n";
         push @{$self->[textRefs]}, \$break;
       }
@@ -192,14 +191,14 @@ sub process
         $$r =~ s/(?:(?<=\w)|\A) (\.\xA0\.\xA0\.|\.\.\.)(?=[ \xA0\n\"\'?!$rsquo$rdquo])(?![ \xA0\n]+\w)/\xA0$1/go;
       } # end if fixEllipses
 
-      push @{$self->[textRefs]}, $r if $self->[parDepth];
+      push @{$self->[textRefs]}, $r if $self->[textRefs];
     } # end else text node
   } # end foreach $r
 
-  if ($isP and not --$self->[parDepth]) {
+  if ($isP and $self->[textRefs]) {
     $self->curlyquote($self->[textRefs]) if $self->[fixQuotes];
-    @{ $self->[textRefs] } = ();
-  } # end if this was a top-level paragraph
+    $self->[textRefs] = undef;
+  } # end if this was a paragraph-like element
 } # end process
 
 #=====================================================================
