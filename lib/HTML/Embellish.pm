@@ -21,7 +21,7 @@ package HTML::Embellish;
 use 5.008;                      # Need good Unicode support
 use warnings;
 use strict;
-#use Carp;
+use Carp qw(croak);
 
 use Exporter ();
 
@@ -63,6 +63,9 @@ sub embellish
 {
   my $html = shift @_;
 
+  croak "First parameter of embellish must be an HTML::Element"
+      unless ref $html and $html->can('content_refs_list');
+
   my $e = HTML::Embellish->new(@_);
   $e->process($html);
 } # end embellish
@@ -73,6 +76,7 @@ sub embellish
 sub new
 {
   my $class = shift;
+  croak "Odd number of parameters passed to HTML::Embellish->new" if @_ % 2;
   my %parms = @_;
 
   my $self = [ (undef) x totalFields ];
@@ -152,6 +156,9 @@ sub curlyquote
 sub process
 {
   my ($self, $elt) = @_;
+
+  croak "HTML::Embellish->process must be passed an HTML::Element"
+      unless ref $elt and $elt->can('content_refs_list');
 
   my $isP = ($elt->tag =~ /^(?: p | h\d | d[dt] | div | blockquote )$/x);
 
@@ -287,9 +294,31 @@ modified in-place; the return value is not meaningful.
 
 =back
 
+
+=head1 DIAGNOSTICS
+
+=over
+
+=item C<< First parameter of embellish must be an HTML::Element >>
+
+You didn't pass a valid HTML::Element object to embellish.
+
+=item C<< HTML::Embellish->process must be passed an HTML::Element >>
+
+You didn't pass a valid HTML::Element object to embellish.
+
+=item C<< Odd number of parameters passed to HTML::Embellish->new >>
+
+C<< HTML::Embellish->new >> takes parameters in C<< KEY => VALUE >>
+style, so there must always be an even number of them.
+
+=back
+
+
 =head1 CONFIGURATION AND ENVIRONMENT
 
 HTML::Embellish requires no configuration files or environment variables.
+
 
 =head1 DEPENDENCIES
 
@@ -297,6 +326,7 @@ Requires the L<HTML::Tree> distribution from CPAN (or some other module
 that implements the L<HTML::Element> interface).  Versions of HTML::Tree
 prior to 3.21 had some bugs involving Unicode characters and
 non-breaking spaces.
+
 
 =head1 INCOMPATIBILITIES
 
