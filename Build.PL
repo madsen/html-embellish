@@ -1,26 +1,36 @@
 #! /usr/bin/perl
 #---------------------------------------------------------------------
 # $Id$
-# Copyright 2006 Christopher J. Madsen
+# Copyright 2007 Christopher J. Madsen
 #
-# Build.PL for HTML-Embellish
+# Build.PL for HTML::Embellish
 #---------------------------------------------------------------------
 
 use strict;
 use warnings;
-use Module::Build;
 
-my $builder = Module::Build->new(
+use FindBin;
+use lib $FindBin::Bin; # Make sure we're using My_Build from our distribution
+
+use My_Build;          # Our customized version of Module::Build
+
+my $builder = My_Build->new(
   module_name        => 'HTML::Embellish',
   license            => 'perl',
-  dist_author        => 'Christopher J. Madsen <cjm@pobox.com>',
-  dist_version_from  => 'lib/HTML/Embellish.pm',
+  dist_author        => 'Christopher J. Madsen <perl@cjmweb.net>',
   requires => {
-      'HTML::Tree' => 3.21,
-      'Test::More' => 0,
+      'perl'          => '5.8.0',
+      'HTML::Tree'    => 3.21,
   },
-  add_to_cleanup     => [ 'HTML-Embellish-*' ],
+  build_requires => {
+      'FindBin'       => 0,
+      'File::Spec'    => 0,
+      'Module::Build' => 0.21,
+      'Test::More'    => 0,
+  },
   create_makefile_pl => 'passthrough',
+  dynamic_config     => 0,
+  meta_merge         => { no_index => { file => ['My_Build.pm'] }},
 );
 
 $builder->create_build_script();

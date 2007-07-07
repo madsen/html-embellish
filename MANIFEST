@@ -1,9 +1,10 @@
 Build.PL
 Changes
-MANIFEST
-META.yml # Will be created by "make dist"
-README
 lib/HTML/Embellish.pm
+MANIFEST
+META.yml			# Will be created by "make dist"
+My_Build.pm
+README
 t/00.load.t
 t/perlcritic.t
 t/pod-coverage.t
