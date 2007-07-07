@@ -1,19 +1,12 @@
 $$Id$
 HTML::Embellish version $%v%$
 
-[ REPLACE THIS...
-
-  The README is used to introduce the module and provide instructions on
-  how to install the module, any machine dependencies it may have (for
-  example C compilers and installed libraries) and any other information
-  that should be understood before the module is installed.
-
-  A README file is required for CPAN modules since CPAN extracts the
-  README file from a module distribution so that people browsing the
-  archive can use it get an idea of the modules uses. It is usually a
-  good idea to provide version information here so that people can
-  decide whether fixes for the module are worth downloading.
-]
+HTML::Embellish adds typographical enhancements to HTML text.  It
+converts certain ASCII characters to Unicode characters.  It converts
+quotation marks and apostrophes into curly quotes.  It converts
+hyphens into em-dashes.  It inserts non-breaking spaces between the
+periods of an ellipsis.  (It doesn't use the HORIZONTAL ELLIPSIS
+character (U+2026), because I like more space in my ellipses.)
 
 
 
@@ -30,7 +23,7 @@ To install this module, run the following commands:
 
 DEPENDENCIES
 
-None.
+HTML::Tree 3.21 or later
 
 
 

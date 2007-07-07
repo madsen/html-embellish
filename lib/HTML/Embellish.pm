@@ -28,7 +28,7 @@ use Exporter ();
 #=====================================================================
 # Package Global Variables:
 
-our $VERSION = '0.01';  # Also update VERSION section in documentation
+our $VERSION = '0.02';  # Also update VERSION section in documentation
 
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(embellish);
@@ -221,7 +221,7 @@ HTML::Embellish - Typographically enhance HTML trees
 
 =head1 VERSION
 
-This document describes HTML::Embellish version 0.01
+This document describes HTML::Embellish version 0.02
 
 
 =head1 SYNOPSIS
