@@ -28,7 +28,7 @@ use Exporter ();
 #=====================================================================
 # Package Global Variables:
 
-our $VERSION = '0.02';  # Also update VERSION section in documentation
+our $VERSION = '0.03';  # Also update VERSION section in documentation
 
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(embellish);
@@ -221,7 +221,7 @@ HTML::Embellish - Typographically enhance HTML trees
 
 =head1 VERSION
 
-This document describes HTML::Embellish version 0.02
+This document describes HTML::Embellish version 0.03
 
 
 =head1 SYNOPSIS
@@ -260,23 +260,23 @@ enhancements.  These are the (optional) flags that you can pass:
 
 =over
 
-=item dashes
+=item C<dashes>
 
 If true, converts sequences of hyphens into em-dashes.  Two or 3
 hyphens become one em-dash.  Four hyphens become two em-dashes.  Any
 other sequence of hyphens is not changed.
 
-=item ellipses
+=item C<ellipses>
 
 If true, inserts non-breaking spaces between the periods making up an
 ellipsis.  Also converts the space before an ellipsis that appears to
 end a sentence to a non-breaking space.
 
-=item quotes
+=item C<quotes>
 
 If true, converts quotation marks and apostrophes into curly quotes.
 
-=item default
+=item C<default>
 
 This is the default value used for flags that you didn't specify.  It
 defaults to 1 (enabled).  The main reason for using this flag is to
