@@ -119,7 +119,7 @@ sub curlyquote
   s/(?<=\xA0)"(?=[ \t\n\r]|[\s\xA0]+$)/$rdquo/g;
   s/(?<=[,;.!?])"(?=[-$mdash])/$rdquo/go;
 
-  s/'(?=(?:em?|til|tisn?|twas)\b|\d\d\W?s)/$rsquo/ig;
+  s/'(?=(?:cause|em?|til|tisn?|twas)\b|\d\d\W?s)/$rsquo/ig;
 
   s/`/$lsquo/g;
   s/^'/$lsquo/;
