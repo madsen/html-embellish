@@ -104,6 +104,7 @@ sub curlyquote
   my ($self, $refs) = @_;
 
   local $_ = join('', map { $$_ } @$refs);
+  utf8::upgrade($_);
 
   s/\("/($ldquo/g;
   s/"\)/$rdquo)/g;
@@ -186,6 +187,7 @@ sub process
       $self->process($$r);
     } else { # text node
       # Convert -- to em-dash:
+      utf8::upgrade($$r);
       if ($self->[fixDashes]) {
         $$r =~ s/(?<!-)---?(?!-)/$mdash/g; # &mdash;
         $$r =~ s/(?<!-)----(?!-)/$mdash$mdash/g;
