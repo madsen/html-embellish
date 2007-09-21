@@ -99,58 +99,68 @@ sub new
 #   self:  The HTML::Embellish object
 #   refs:  Arrayref of stringrefs to the text of this paragraph
 
-sub curlyquote
+sub processTextRefs
 {
   my ($self, $refs) = @_;
 
   local $_ = join('', map { $$_ } @$refs);
   utf8::upgrade($_);
 
-  s/\("/($ldquo/g;
-  s/"\)/$rdquo)/g;
+  my $fixQuotes = $self->[fixQuotes];
+  if ($fixQuotes) {
+    s/\("/($ldquo/g;
+    s/"\)/$rdquo)/g;
 
-  s/^([\xA0\s]*)"/$1$ldquo/;
-  s/(?<=[\s\pZ])"(?=[^\s\pZ])/$ldquo/g;
-  s/(?<=\pP)"(?=\w)/$ldquo/g;
-  s/(?<=[ \t\n\r])"(?=\xA0)/$ldquo/g;
+    s/^([\xA0\s]*)"/$1$ldquo/;
+    s/(?<=[\s\pZ])"(?=[^\s\pZ])/$ldquo/g;
+    s/(?<=\pP)"(?=\w)/$ldquo/g;
+    s/(?<=[ \t\n\r])"(?=\xA0)/$ldquo/g;
 
-  s/"[\xA0\s]*$/$rdquo/;
-  s/(?<![\s\pZ])"(?=[\s\pZ])/$rdquo/g;
-  s/(?<=\w)"(?=\pP)/$rdquo/g;
-  s/(?<=\xA0)"(?=[ \t\n\r]|[\s\xA0]+$)/$rdquo/g;
-  s/(?<=[,;.!?])"(?=[-$mdash])/$rdquo/go;
+    s/"[\xA0\s]*$/$rdquo/;
+    s/(?<![\s\pZ])"(?=[\s\pZ])/$rdquo/g;
+    s/(?<=\w)"(?=\pP)/$rdquo/g;
+    s/(?<=\xA0)"(?=[ \t\n\r]|[\s\xA0]+$)/$rdquo/g;
+    s/(?<=[,;.!?])"(?=[-$mdash])/$rdquo/go;
 
-  s/'(?=(?:cause|em?|til|tisn?|twas)\b|\d\d\W?s)/$rsquo/ig;
+    s/'(?=(?:cause|em?|til|tisn?|twas)\b|\d\d\W?s|\d\d(?!\w))/$rsquo/ig;
 
-  s/`/$lsquo/g;
-  s/^'/$lsquo/;
-  s/(?<=[\s\pZ])'(?=[^\s\pZ])/$lsquo/g;
-  s/(?<=\pP)(?<![.!?])'(?=\w)/$lsquo/g;
-  s/(?<=[ \t\n\r])'(?=\xA0)/$lsquo/g;
+    s/`/$lsquo/g;
+    s/^'/$lsquo/;
+    s/(?<=[\s\pZ])'(?=[^\s\pZ])/$lsquo/g;
+    s/(?<=\pP)(?<![.!?])'(?=\w)/$lsquo/g;
+    s/(?<=[ \t\n\r])'(?=\xA0)/$lsquo/g;
 
-  s/'/$rsquo/g;
+    s/'/$rsquo/g;
 
-  s/(?<!\PZ)"([\xA0\s]+$lsquo)/$ldquo$1/go;
-  s/(${rsquo}[\xA0\s]+)"(?!\PZ)/$1$rdquo/go;
+    s/(?<!\PZ)"([\xA0\s]+$lsquo)/$ldquo$1/go;
+    s/(${rsquo}[\xA0\s]+)"(?!\PZ)/$1$rdquo/go;
 
-  1 while s/^($balancedQuoteString (?![\"$ldquo$rdquo])[ \t\n\r\pP]) "/$1$ldquo/xo
-      or  s/^($balancedQuoteString $ldquo $notQuote*) "/$1$rdquo/xo;
+    1 while s/^($balancedQuoteString (?![\"$ldquo$rdquo])[ \t\n\r\pP]) "/$1$ldquo/xo
+        or  s/^($balancedQuoteString $ldquo $notQuote*) "/$1$rdquo/xo;
 
-  s/${ldquo}\s([$lsquo$rsquo])/$ldquo\xA0$1/go;
-  s/${rsquo}\s$rdquo/$rsquo\xA0$rdquo/go;
+    s/${ldquo}\s([$lsquo$rsquo])/$ldquo\xA0$1/go;
+    s/${rsquo}\s$rdquo/$rsquo\xA0$rdquo/go;
+  } # end if fixQuotes
+
+  if ($self->[fixEllipses]) {
+    s/( [\"$ldquo$lsquo] \.(?:\xA0\.)+ ) \s+ /$1\xA0/xo;
+    s/\s+(?= \. (?:\xA0[.,!?])+ [$rdquo$rsquo\xA0\"]* $)/\xA0/xo;
+  }
 
   # Return the text to where it came from:
   #   This only works because the replacement text is always
   #   the same length as the original.
   foreach my $r (@$refs) {
     $$r = substr($_, 0, length($$r), '');
-    # Since the replacement text isn't the same length,
-    # these can't be done on the string as a whole:
-    $$r =~ s/(?<=[$ldquo$rdquo])(?=[$lsquo$rsquo])/\xA0/go;
-    $$r =~ s/(?<=[$lsquo$rsquo])(?=[$ldquo$rdquo])/\xA0/go;
-    $$r =~ s/(?<=[$ldquo$lsquo])\xA0(?=\.\xA0\.)//go;
+    if ($fixQuotes) {
+      # Since the replacement text isn't the same length,
+      # these can't be done on the string as a whole:
+      $$r =~ s/(?<=[$ldquo$rdquo])(?=[$lsquo$rsquo])/\xA0/go;
+      $$r =~ s/(?<=[$lsquo$rsquo])(?=[$ldquo$rdquo])/\xA0/go;
+      $$r =~ s/(?<=[$ldquo$lsquo])\xA0(?=\.\xA0\.)//go;
+    } # end if fixQuotes
   } # end foreach @$refs
-} # end curlyquote
+} # end processTextRefs
 
 #---------------------------------------------------------------------
 # Recursively process an HTML::Element tree:
@@ -164,7 +174,8 @@ sub process
 
   my $isP = ($elt->tag =~ /^(?: p | h\d | d[dt] | div | blockquote )$/x);
 
-  $self->[textRefs] = [] if $isP;
+  $self->[textRefs] = []
+      if $isP and ($self->[fixQuotes] or $self->[fixEllipses]);
 
   my @content = $elt->content_refs_list;
 
@@ -206,7 +217,7 @@ sub process
   } # end foreach $r
 
   if ($isP and $self->[textRefs]) {
-    $self->curlyquote($self->[textRefs]) if $self->[fixQuotes];
+    $self->processTextRefs($self->[textRefs]);
     $self->[textRefs] = undef;
   } # end if this was a paragraph-like element
 } # end process
