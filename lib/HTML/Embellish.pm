@@ -122,7 +122,7 @@ sub processTextRefs
     s/(?<=\xA0)"(?=[ \t\n\r]|[\s\xA0]+$)/$rdquo/g;
     s/(?<=[,;.!?])"(?=[-$mdash])/$rdquo/go;
 
-    s/'(?=(?:cause|em?|til|tisn?|twas)\b|\d\d\W?s|\d\d(?!\w))/$rsquo/ig;
+    s/'(?=(?:cause|cept|e[mr]?|nothers?|s|til|tisn?|twas|uns?)\b|\d\d\W?s|\d\d(?!\w))/$rsquo/ig;
 
     s/`/$lsquo/g;
     s/^'/$lsquo/;
