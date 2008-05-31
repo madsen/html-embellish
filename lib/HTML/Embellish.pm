@@ -25,10 +25,12 @@ use Carp qw(croak);
 
 use Exporter ();
 
+###open(LOG, '>:utf8', 'em.log');
+
 #=====================================================================
 # Package Global Variables:
 
-our $VERSION = '0.03';  # Also update VERSION section in documentation
+our $VERSION = '0.03';
 
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(embellish);
@@ -138,6 +140,9 @@ sub processTextRefs
     1 while s/^($balancedQuoteString (?![\"$ldquo$rdquo])[ \t\n\r\pP]) "/$1$ldquo/xo
         or  s/^($balancedQuoteString $ldquo $notQuote*) "/$1$rdquo/xo;
 
+    #s/(?<=\p{IsPunct})"(?=\p{IsAlpha})/$ldquo/go;
+    s/(?<=[[:punct:]])"(?=[[:alpha:]])/$ldquo/go;
+
     s/${ldquo}\s([$lsquo$rsquo])/$ldquo\xA0$1/go;
     s/${rsquo}\s$rdquo/$rsquo\xA0$rdquo/go;
   } # end if fixQuotes
@@ -217,6 +222,7 @@ sub process
   } # end foreach $r
 
   if ($isP and $self->[textRefs]) {
+###    print LOG (map { utf8::is_utf8($$_) . "{$$_}" } @{ $self->[textRefs] }), "\n";
     $self->processTextRefs($self->[textRefs]);
     $self->[textRefs] = undef;
   } # end if this was a paragraph-like element
@@ -235,7 +241,7 @@ HTML::Embellish - Typographically enhance HTML trees
 
 =head1 VERSION
 
-This document describes HTML::Embellish version 0.03
+This document describes $Id$
 
 
 =head1 SYNOPSIS
