@@ -40,6 +40,7 @@ my $lsquo = chr(0x2018);
 my $rsquo = chr(0x2019);
 my $ldquo = chr(0x201C);
 my $rdquo = chr(0x201D);
+my $hellip = chr(0x2026);
 
 my $notQuote = qq/[^\"$ldquo$rdquo]/;
 my $balancedQuoteString = qq/(?: $notQuote | $ldquo $notQuote* $rdquo)*/;
@@ -51,7 +52,8 @@ my $balancedQuoteString = qq/(?: $notQuote | $ldquo $notQuote* $rdquo)*/;
 BEGIN
 {
   my $i = 0;
-  for (qw(textRefs fixQuotes fixDashes fixEllipses totalFields)) {
+  for (qw(textRefs fixQuotes fixDashes fixEllipses fixEllipseSpace fixHellip
+          totalFields)) {
     ## no critic (ProhibitStringyEval)
     eval "sub $_ () { $i }";
     ++$i;
@@ -91,6 +93,11 @@ sub new
   $self->[fixEllipses] = (exists $parms{ellipses} ? $parms{ellipses} : $def);
   $self->[fixQuotes]   = (exists $parms{quotes}   ? $parms{quotes}   : $def);
 
+  $self->[fixHellip]       = (exists $parms{hellip}
+                              ? $parms{hellip} : $self->[fixEllipses]);
+  $self->[fixEllipseSpace] = (exists $parms{space_ellipses}
+                              ? $parms{space_ellipses} : $self->[fixEllipses]);
+
   return $self;
 } # end new
 
@@ -124,7 +131,7 @@ sub processTextRefs
     s/(?<=\xA0)"(?=[ \t\n\r]|[\s\xA0]+$)/$rdquo/g;
     s/(?<=[,;.!?])"(?=[-$mdash])/$rdquo/go;
 
-    s/'(?=(?:cause|cept|e[mr]?|nothers?|s|til|tisn?|twas|uns?)\b|\d\d\W?s|\d\d(?!\w))/$rsquo/ig;
+    s/'(?=(?:cause|cept|d|e[mr]?e?|im|m|n|nothers?|r|s|t|til|tisn?|tw(?:asn?|ere?|ould\w*)|ud|uns?)\b|\d\d\W?s|\d\d(?!\w))/$rsquo/ig;
 
     s/`/$lsquo/g;
     s/^'/$lsquo/;
@@ -148,8 +155,8 @@ sub processTextRefs
   } # end if fixQuotes
 
   if ($self->[fixEllipses]) {
-    s/( [\"$ldquo$lsquo] \.(?:\xA0\.)+ ) \s+ /$1\xA0/xo;
-    s/\s+(?= \. (?:\xA0[.,!?])+ [$rdquo$rsquo\xA0\"]* $)/\xA0/xo;
+    s/( [\"$ldquo$lsquo] \.(?:\xA0\.)+ ) \s /$1\xA0/xog;
+    s/\s (?= \. (?:\xA0[.,!?])+ [$rdquo$rsquo\xA0\"]* $)/\xA0/xo;
   }
 
   # Return the text to where it came from:
@@ -209,6 +216,8 @@ sub process
         $$r =~ s/(?<!-)----(?!-)/$mdash$mdash/g;
       } # end if fixDashes
 
+      $$r =~ s/$hellip/.../go if $self->[fixHellip];
+
       # Fix ellipses:
       if ($self->[fixEllipses]) {
         $$r =~ s/(?<!\.)\.\.\.([.?!;:,])(?!\.)/.\xA0.\xA0.\xA0$1/g;
@@ -216,6 +225,21 @@ sub process
         $$r =~ s/\. (?=[,.?!])/.\xA0/g;
         $$r =~ s/(?:(?<=\w)|\A) (\.\xA0\.\xA0\.|\.\.\.)(?=[ \xA0\n\"\'?!$rsquo$rdquo])(?![ \xA0\n]+\w)/\xA0$1/go;
       } # end if fixEllipses
+
+      if ($self->[fixEllipseSpace]) {
+        $$r =~ s/(?<=\w) (\.(?:\xA0\.)+) (?=\w)/ $1 /gx;
+        $$r =~ s/(?<=\w[!?,;]) (\.(?:\xA0\.)+) (?=\w)/ $1 /gx;
+        $$r =~ s/( [\"$ldquo$lsquo] \.(?:\xA0\.)+ ) (?=\w) /$1\xA0/xog;
+        $$r =~ s/(?<=\w) (\.\xA0\.\xA0\.) (?![\xA0\w])/\xA0$1/gx;
+
+        if ($self->[textRefs] and @{$self->[textRefs]}) {
+          $$r =~ s/^(\.(?:\xA0\.)+) (?=\w)/ $1 /gx
+              if ${$self->[textRefs][-1]} =~ /\w[!?,;]?$/;
+
+          ${$self->[textRefs][-1]} =~ s/(?<=\w)\xA0(\.\xA0\.\xA0\.)$/ $1 /
+              if $$r =~ /^\w/;
+        }
+      } # end if fixEllipseSpace
 
       push @{$self->[textRefs]}, $r if $self->[textRefs];
     } # end else text node
@@ -291,6 +315,17 @@ other sequence of hyphens is not changed.
 If true, inserts non-breaking spaces between the periods making up an
 ellipsis.  Also converts the space before an ellipsis that appears to
 end a sentence to a non-breaking space.
+
+=item C<hellip>
+
+If true, converts the &hellip; character to 3 periods.  (To insert
+non-breaking spaces between them, also set C<ellipses> to true.)  This
+defaults to the value of C<ellipses>.
+
+=item C<space_ellipses>
+
+If true, adds whitespace around ellipses when necessary.  This
+defaults to the value of C<ellipses>.
 
 =item C<quotes>
 
