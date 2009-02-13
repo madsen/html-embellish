@@ -184,10 +184,13 @@ sub process
   croak "HTML::Embellish->process must be passed an HTML::Element"
       unless ref $elt and $elt->can('content_refs_list');
 
+  my $parentRefs;
   my $isP = ($elt->tag =~ /^(?: p | h\d | d[dt] | div | blockquote )$/x);
 
-  $self->[textRefs] = []
-      if $isP and ($self->[fixQuotes] or $self->[fixEllipses]);
+  if ($isP and ($self->[fixQuotes] or $self->[fixEllipses])) {
+    $parentRefs = $self->[textRefs];
+    $self->[textRefs] = []
+  } # end if need to collect text refs
 
   my @content = $elt->content_refs_list;
 
@@ -248,7 +251,8 @@ sub process
   if ($isP and $self->[textRefs]) {
 ###    print LOG (map { utf8::is_utf8($$_) . "{$$_}" } @{ $self->[textRefs] }), "\n";
     $self->processTextRefs($self->[textRefs]);
-    $self->[textRefs] = undef;
+    push @$parentRefs, @{$self->[textRefs]} if $parentRefs;
+    $self->[textRefs] = $parentRefs;
   } # end if this was a paragraph-like element
 } # end process
 

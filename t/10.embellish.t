@@ -3,7 +3,7 @@
 # $Id$
 #---------------------------------------------------------------------
 
-use Test::More tests => 9;
+use Test::More tests => 10;
 
 use HTML::Element;
 
@@ -65,6 +65,17 @@ $html = HTML::Element->new_from_lol($source_list);
 embellish($html, quotes => 1, default => 0);
 is(fmt($html), <<"", 'quotes only');
 <p>${ldquo}Here we have--in this string--some ${lsquo}characters${rsquo} ... to process.$rdquo</p>
+
+#---------------------------------------------------------------------
+$html = HTML::Element->new_from_lol(
+  [ blockquote =>
+    [ a => { href => "dest" }, qq!This isn't "wrong".! ],
+    [ blockquote => qq!It should 'work'.! ] ]
+);
+
+embellish($html);
+is(fmt($html), <<"", 'nested blockquotes');
+<blockquote><a href="dest">This isn${rsquo}t ${ldquo}wrong${rdquo}.</a><blockquote>It should ${lsquo}work${rsquo}.</blockquote></blockquote>
 
 #=====================================================================
 # Argument checking:
