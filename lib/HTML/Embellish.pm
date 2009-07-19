@@ -185,7 +185,7 @@ sub process
       unless ref $elt and $elt->can('content_refs_list');
 
   my $parentRefs;
-  my $isP = ($elt->tag =~ /^(?: p | h\d | d[dt] | div | blockquote )$/x);
+  my $isP = ($elt->tag =~ /^(?: p | h\d | d[dt] | div | blockquote | title )$/x);
 
   if ($isP and ($self->[fixQuotes] or $self->[fixEllipses])) {
     $parentRefs = $self->[textRefs];
