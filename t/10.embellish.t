@@ -3,7 +3,7 @@
 # $Id$
 #---------------------------------------------------------------------
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 
 use HTML::Element;
 
@@ -76,6 +76,15 @@ $html = HTML::Element->new_from_lol(
 embellish($html);
 is(fmt($html), <<"", 'nested blockquotes');
 <blockquote><a href="dest">This isn${rsquo}t ${ldquo}wrong${rdquo}.</a><blockquote>It should ${lsquo}work${rsquo}.</blockquote></blockquote>
+
+#---------------------------------------------------------------------
+$html = HTML::Element->new_from_lol(
+  [ p => q!"Probably. 'If - '"! ]
+);
+
+embellish($html);
+is(fmt($html), <<"", 'Probably If');
+<p>${ldquo}Probably. ${lsquo}If - $rsquo$nb$rdquo</p>
 
 #=====================================================================
 # Argument checking:

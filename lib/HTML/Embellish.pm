@@ -18,7 +18,7 @@ package HTML::Embellish;
 # Typographically enhance HTML trees
 #---------------------------------------------------------------------
 
-use 5.008;                      # Need good Unicode support
+use 5.008; # Need good Unicode support; Perl 5.10 recommended but 5.8 may work
 use warnings;
 use strict;
 use Carp qw(croak);
@@ -132,6 +132,8 @@ sub processTextRefs
     s/(?<=[,;.!?])"(?=[-$mdash])/$rdquo/go;
 
     s/'(?=(?:cause|cept|d|e[mr]?e?|fraidy?|im|m|n|nothers?|r|s|t|til|tisn?|tw(?:asn?|ere?|ould\w*)|ud|uns?)\b|\d\d\W?s|\d\d(?!\w))/$rsquo/ig;
+
+    s/'([ \xA0]?$rdquo)/$rsquo$1/go;
 
     s/`/$lsquo/g;
     s/^'/$lsquo/;
@@ -394,7 +396,11 @@ None reported.
 
 =head1 BUGS AND LIMITATIONS
 
-No bugs have been reported.
+I've experienced occasional segfaults when using this module with Perl
+5.8.8.  Since a pure-Perl module like this shouldn't be able to cause
+a segfault, I believe the issue is with Perl 5.8.  I recommend using
+Perl 5.10 if at all possible, as the files that segfaulted under 5.8.8
+worked fine with 5.10.
 
 
 =head1 AUTHOR
