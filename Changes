@@ -1,7 +1,15 @@
 Revision history for HTML::Embellish
 
-0.02   Jul 7 2007
+0.03   NOT
+	- Make the (" and ") rules higher priority
+	- Use utf8::upgrade to avoid malformed UTF-8 bug
+	- Renamed curlyquote to processTextRefs (private method)
+	- Convert space to nbsp around ellipses when appropriate
+	- Add 'cause, 'cept, 'd, 'ee, 'er, 'fraid, 'im, 'm, 'n,
+	  'nother, 'r, 're, 's, 't, 'ud & 'un as special cases
+
+0.02   July 7, 2007
 	- Fixed README
 
-0.01   Jul 7 2007
+0.01   July 7, 2007
 	- Initial release
