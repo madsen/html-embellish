@@ -1,0 +1,11 @@
+/blib/
+/META.yml
+/MYMETA.yml
+/.build/
+/_build/
+Build
+Makefile
+/pm_to_blib
+HTML-Embellish-*.tar.gz
+HTML-Embellish-*/
+/test-results/
