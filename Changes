@@ -1,6 +1,6 @@
 Revision history for HTML::Embellish
 
-0.03   NOT
+0.03   March 15, 2010
 	- Make the (" and ") rules higher priority
 	- Use utf8::upgrade to avoid malformed UTF-8 bug
 	- Renamed curlyquote to processTextRefs (private method)
