@@ -26,7 +26,10 @@ sub fmt
 {
   my ($html) = @_;
 
-  $html->as_HTML("<>&", undef, {});
+  my $text = $html->as_HTML("<>&", undef, {});
+  $text =~ s/\s*\z/\n/;         # Ensure it ends with a single newline
+
+  return $text;
 } # end fmt
 
 #=====================================================================
