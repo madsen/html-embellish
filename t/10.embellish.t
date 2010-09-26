@@ -20,6 +20,7 @@ my (@tests, $source_list);
 
 BEGIN {
 my $nb    = chr(0x00A0);
+my $sp6   = chr(0x2006);        # SIX-PER-EM SPACE
 my $mdash = chr(0x2014);
 my $lsquo = chr(0x2018);
 my $rsquo = chr(0x2019);
@@ -79,6 +80,36 @@ $source_list = [
   [],
   <<"", 'quoted quote dash',
 <p>She said, ${ldquo}$nb${lsquo}All the world${rsquo}s a stage,${rsquo}$nb${rdquo}${mdash}and then${mdash}${ldquo}nonsense.${rdquo}</p>
+
+#---------------------------------------------------------------------
+  [ p => q!And now . . . some spaces! ],
+  [],
+  <<"", 'spaced ellipses',
+<p>And now .$nb.$nb. some spaces</p>
+
+#---------------------------------------------------------------------
+  [ p => q!". . . some spaces . . ."! ],
+  [],
+  <<"", 'spaced ellipses and quotes',
+<p>${ldquo}.$nb.$nb.${nb}some spaces$nb.$nb.$nb.$rdquo</p>
+
+#---------------------------------------------------------------------
+  [ p => 'And now . . . ? Or now. . . !' ],
+  [ ellipses => 1, default => 0 ],
+  <<"", 'ellipses with punctuation',
+<p>And now$nb.$nb.$nb.$nb? Or now.$nb.$nb.$nb!</p>
+
+#---------------------------------------------------------------------
+  [ p => qq!".$sp6.$sp6. some spaces$sp6.$sp6.$sp6."! ],
+  [],
+  <<"", 'spaced ellipses and quotes',
+<p>${ldquo}.$nb.$nb.${nb}some spaces$nb.$nb.$nb.$rdquo</p>
+
+#---------------------------------------------------------------------
+  [ p => "And now .$sp6.$sp6.$sp6? Or now.$sp6.$sp6.$sp6!" ],
+  [ ellipses => 1, default => 0 ],
+  <<"", 'ellipses with punctuation',
+<p>And now$nb.$nb.$nb.$nb? Or now.$nb.$nb.$nb!</p>
 
 #---------------------------------------------------------------------
 ); # end @tests

@@ -29,7 +29,7 @@ use Exporter ();
 #=====================================================================
 # Package Global Variables:
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(embellish);
@@ -226,7 +226,7 @@ sub process
       if ($self->[fixEllipses]) {
         $$r =~ s/(?<!\.)\.\.\.([.?!;:,])(?!\.)/.\xA0.\xA0.\xA0$1/g;
         $$r =~ s/(?<!\.)\.\.\.(?!\.)/.\xA0.\xA0./g;
-        $$r =~ s/\. (?=[,.?!])/.\xA0/g;
+        $$r =~ s/(?<= \.) [^\PZ\x{200B}] (?=[.,?!])/\xA0/gx;
         $$r =~ s/(?:(?<=\w)|\A) (\.\xA0\.\xA0\.|\.\.\.)(?=[ \xA0\n\"\'?!$rsquo$rdquo])(?![ \xA0\n]+\w)/\xA0$1/go;
       } # end if fixEllipses
 
