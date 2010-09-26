@@ -1,6 +1,6 @@
 Revision history for HTML::Embellish
 
-0.04   NOT
+0.04   September 25, 2010
 	- Convert any whitespace between a period and an ending
 	  punctuation mark to &nbsp;
 	  (Previously, only an actual space was accepted)
