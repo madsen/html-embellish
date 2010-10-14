@@ -1,5 +1,8 @@
 Revision history for HTML::Embellish
 
+0.05   NOT
+	- Call normalize_content before processing an element node
+
 0.04   September 25, 2010
 	- Convert any whitespace between a period and an ending
 	  punctuation mark to &nbsp;

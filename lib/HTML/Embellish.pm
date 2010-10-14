@@ -29,7 +29,7 @@ use Exporter ();
 #=====================================================================
 # Package Global Variables:
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(embellish);
@@ -185,6 +185,8 @@ sub process
   croak "HTML::Embellish->process must be passed an HTML::Element"
       unless ref $elt and $elt->can('content_refs_list');
 
+  return if $elt->is_empty;
+
   my $parentRefs;
   my $isP = ($elt->tag =~ /^(?: p | h\d | d[dt] | div | blockquote | title )$/x);
 
@@ -193,6 +195,7 @@ sub process
     $self->[textRefs] = []
   } # end if need to collect text refs
 
+  $elt->normalize_content;
   my @content = $elt->content_refs_list;
 
   if ($self->[fixQuotes] and $self->[textRefs] and @content) {
