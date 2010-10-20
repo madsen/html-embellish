@@ -2,6 +2,8 @@ Revision history for HTML::Embellish
 
 0.05   NOT
 	- Call normalize_content before processing an element node
+	- Try to avoid exceeding the complex regular subexpression
+	  recursion limit
 
 0.04   September 25, 2010
 	- Convert any whitespace between a period and an ending

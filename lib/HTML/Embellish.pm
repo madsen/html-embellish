@@ -42,7 +42,9 @@ my $rdquo = chr(0x201D);
 my $hellip = chr(0x2026);
 
 my $notQuote = qq/[^\"$ldquo$rdquo]/;
-my $balancedQuoteString = qq/(?: $notQuote | $ldquo $notQuote* $rdquo)*/;
+my $balancedQuoteString = qr/(?: (?>[^ \t\n\r\pP]+)
+                               | (?= [ \t\n\r\pP])$notQuote
+                               | $ldquo (?>$notQuote*) $rdquo )*/x;
 
 #=====================================================================
 # Constants:
@@ -145,8 +147,11 @@ sub processTextRefs
     s/(?<!\PZ)"([\xA0\s]+$lsquo)/$ldquo$1/go;
     s/(${rsquo}[\xA0\s]+)"(?!\PZ)/$1$rdquo/go;
 
-    1 while s/^($balancedQuoteString (?![\"$ldquo$rdquo])[ \t\n\r\pP]) "/$1$ldquo/xo
-        or  s/^($balancedQuoteString $ldquo $notQuote*) "/$1$rdquo/xo;
+    if (/"/) {
+      1 while s/^($balancedQuoteString (?![\"$ldquo$rdquo])[ \t\n\r\pP]) "
+               /$1$ldquo/xo
+          or  s/^($balancedQuoteString $ldquo $notQuote*) "/$1$rdquo/xo;
+    } # end if straight quotes remaining in string
 
     #s/(?<=\p{IsPunct})"(?=\p{IsAlpha})/$ldquo/go;
     s/(?<=[[:punct:]])"(?=[[:alpha:]])/$ldquo/go;
