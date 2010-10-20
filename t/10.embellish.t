@@ -5,6 +5,13 @@ use strict;
 use warnings;
 use Test::More;
 
+binmode STDOUT, ':utf8';
+
+my $checkWarnings;
+BEGIN {
+  $checkWarnings = eval { require Test::NoWarnings; 1 };
+}
+
 use HTML::Element;
 
 #=====================================================================
@@ -13,7 +20,8 @@ sub fmt
   my ($html) = @_;
 
   my $text = $html->as_HTML("<>&", undef, {});
-  $text =~ s/\s*\z/\n/;         # Ensure it ends with a single newline
+  $text =~ s/[ \t\r\n]+/ /g;  # Convert all whitespace to single space
+  $text =~ s/\s*\z/\n/;       # Ensure it ends with a single newline
 
   return $text;
 } # end fmt
@@ -117,7 +125,19 @@ $source_list = [
 #---------------------------------------------------------------------
 ); # end @tests
 
-plan tests => 4 + @tests / 4;
+#---------------------------------------------------------------------
+{ # This would produce a warning prior to v0.05:
+  #   Complex regular subexpression recursion limit (32766) exceeded
+  my $long  = ("lorem - ipsum, " x 10) . 'dolor';
+  my $longQ = ("$long. " x 10) .
+              (qq!${ldquo}$long.$rdquo ! x 50) .
+              ("$long. " x 200);
+
+  push @tests, [ p => $longQ ], [], "<p>$longQ</p>\n", 'very long text';
+} # end very long text test
+
+#---------------------------------------------------------------------
+plan tests => 5 + @tests / 4;
 
 use_ok('HTML::Embellish');
 } # end BEGIN
@@ -151,5 +171,11 @@ like($@, qr/^Odd number of parameters passed to HTML::Embellish->new at \Q$0\E l
 
 eval { HTML::Embellish->new()->process('whoops') };
 like($@, qr/^HTML::Embellish->process must be passed an HTML::Element at \Q$0\E line \d/, 'bad parameter');
+
+SKIP: {
+ skip "Test::NoWarnings not installed", 1 unless $checkWarnings;
+
+ Test::NoWarnings::had_no_warnings();
+}
 
 done_testing;
