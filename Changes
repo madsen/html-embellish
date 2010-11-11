@@ -1,6 +1,6 @@
 Revision history for HTML::Embellish
 
-0.05   NOT
+0.05   November 11, 2010
 	- Call normalize_content before processing an element node
 	- Try to avoid exceeding the complex regular subexpression
 	  recursion limit
