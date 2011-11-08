@@ -29,7 +29,7 @@ use Exporter ();
 #=====================================================================
 # Package Global Variables:
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(embellish);
@@ -132,7 +132,7 @@ sub processTextRefs
     s/(?<=\xA0)"(?=[ \t\n\r]|[\s\xA0]+$)/$rdquo/g;
     s/(?<=[,;.!?])"(?=[-$mdash])/$rdquo/go;
 
-    s/'(?=(?:cause|cept|d|e[mr]?e?|fraidy?|im|m|n|nothers?|re?|s|t|til|tisn?|tw(?:asn?|ere?|ould\w*)|ud|uns?)\b|\d\d\W?s|\d\d(?!\w))/$rsquo/ig;
+    s/'(?=(?:cause|cept|d|e[mr]?e?|fraidy?|im|m|n|nothers?|re?|s|scuse|t|til|tisn?|tw(?:asn?|ere?|ould\w*)|ud|uns?)\b|\d\d\W?s|\d\d(?!\w))/$rsquo/ig;
 
     s/'([ \xA0]?$rdquo)/$rsquo$1/go;
 
