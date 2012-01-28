@@ -1,5 +1,8 @@
 Revision history for HTML::Embellish
 
+0.07   NOT
+	- Add 'tweren't as a special case
+
 0.06   November 11, 2011
 	- Add 'scuse as a special case
 
