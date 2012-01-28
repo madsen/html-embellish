@@ -5,12 +5,13 @@
 
 use strict;
 use warnings;
-use Test::More;
+use Test::More 0.88;            # done_testing
 
 binmode STDOUT, ':utf8';
 
 my $checkWarnings;
 BEGIN {
+  # RECOMMEND PREREQ: Test::NoWarnings
   $checkWarnings = eval { require Test::NoWarnings; 1 };
 }
 
