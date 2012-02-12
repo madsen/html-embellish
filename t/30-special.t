@@ -48,6 +48,7 @@ my @tests = qw(
   'ere
   'fraid
   'fraidy
+  'gainst
   'im
   'm
   'n
