@@ -133,7 +133,7 @@ sub processTextRefs
     s/(?<=\xA0)"(?=[ \t\n\r]|[\s\xA0]+$)/$rdquo/g;
     s/(?<=[,;.!?])"(?=[-$mdash])/$rdquo/go;
 
-    s/'(?=(?:cause|cept|d|e[mr]?e?|fraidy?|gainst|im|m|n|nothers?|re?|s|scuse|t|til|tisn?|tw(?:asn?|ere?n?|ould\w*)|ud|uns?)\b|\d\d\W?s|\d\d(?!\w))/$rsquo/ig;
+    s/'(?=(?:cause|cept|d|e[mr]?e?|fraidy?|gainst|im|m|n|nothers?|re?|rithmetic|s|scuse|t|til|tisn?|tw(?:asn?|ere?n?|ould\w*)|ud|uns?)\b|\d\d\W?s|\d\d(?!\w))/$rsquo/ig;
 
     s/'([ \xA0]?$rdquo)/$rsquo$1/go;
 

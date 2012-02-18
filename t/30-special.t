@@ -56,6 +56,7 @@ my @tests = qw(
   'nothers
   'r
   're
+  'rithmetic
   's
   'scuse
   't
