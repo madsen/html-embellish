@@ -54,11 +54,14 @@ my @tests = qw(
   'n
   'nother
   'nothers
+  'nuff
   'r
   're
   'rithmetic
   's
   'scuse
+  'spect
+  'spects
   't
   'til
   'tis
