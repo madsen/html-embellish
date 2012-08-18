@@ -52,6 +52,7 @@ my @tests = qw(
   'im
   'm
   'n
+  'Nam
   'nother
   'nothers
   'nuff

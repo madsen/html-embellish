@@ -1,5 +1,8 @@
 Revision history for HTML::Embellish
 
+0.08   NOT
+	- Add 'Nam as special case
+
 0.07   April 20, 2012
 	- Add 'gainst, 'nuff, 'rithmetic, 'spect, & 'tweren't as special cases
 	- New tests: 00-all_prereqs.t & 30-special.t
