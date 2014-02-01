@@ -22,7 +22,7 @@ use warnings;
 use strict;
 use Carp qw(croak);
 
-use Exporter ();
+use Exporter 5.57 'import';     # exported import method
 
 ###open(LOG, '>:utf8', 'em.log');
 
@@ -32,7 +32,6 @@ use Exporter ();
 our $VERSION = '1.000';
 # This file is part of {{$dist}} {{$dist_version}} ({{$date}})
 
-our @ISA    = qw(Exporter);
 our @EXPORT = qw(embellish);
 
 my $mdash = chr(0x2014);
