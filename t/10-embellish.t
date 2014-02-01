@@ -12,7 +12,7 @@ binmode STDOUT, ':utf8';
 my $checkWarnings;
 BEGIN {
   # RECOMMEND PREREQ: Test::NoWarnings
-  $checkWarnings = eval { require Test::NoWarnings; 1 };
+  $checkWarnings = eval "require Test::NoWarnings; 1";
 }
 
 use HTML::Element;

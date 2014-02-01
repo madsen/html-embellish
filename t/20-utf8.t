@@ -8,7 +8,7 @@ use warnings;
 
 use Test::More tests => 5;
 
-use HTML::Element;
+use HTML::Element 3.21;
 
 BEGIN {
     use_ok('HTML::Embellish');
