@@ -38,6 +38,7 @@ my $rsquo = chr(0x2019);
 
 my @tests = qw(
   '45
+  '80-five
   '90s
   'cause
   'cept
@@ -69,8 +70,10 @@ my @tests = qw(
   'tisn't
   'twas
   'twasn't
+  'twer
   'twere
   'tweren't
+  'twern't
   'twould
   'twouldn't
   'ud

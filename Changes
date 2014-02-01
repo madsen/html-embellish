@@ -1,5 +1,8 @@
 Revision history for HTML::Embellish
 
+1.000  NOT
+	- Add a few more test cases
+
 0.08   2012-08-18
 	- Add 'Nam as special case
 

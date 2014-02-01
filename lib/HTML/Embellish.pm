@@ -29,7 +29,7 @@ use Exporter ();
 #=====================================================================
 # Package Global Variables:
 
-our $VERSION = '0.08';
+our $VERSION = '1.000';
 # This file is part of {{$dist}} {{$dist_version}} ({{$date}})
 
 our @ISA    = qw(Exporter);
