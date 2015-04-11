@@ -40,6 +40,8 @@ my @tests = qw(
   '45
   '80-five
   '90s
+  'ave
+  'aves
   'cause
   'cept
   'd
@@ -50,6 +52,9 @@ my @tests = qw(
   'fraid
   'fraidy
   'gainst
+  'igh
+  'ighest
+  'ighness
   'im
   'm
   'n
@@ -57,6 +62,10 @@ my @tests = qw(
   'nother
   'nothers
   'nuff
+  'onor
+  'onors
+  'onour
+  'onours
   'r
   're
   'rithmetic

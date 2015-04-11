@@ -133,18 +133,22 @@ sub processTextRefs
     s/(?<=[,;.!?])"(?=[-$mdash])/$rdquo/go;
 
     s/'(?=
-        (?: cause
+        (?: angmans?
+          | aves?
+          | cause
           | cept
           | d
           | e[mr]?e?
           | fraidy?
           | gainst
+          | igh\w*
           | im
           | m
           | n
           | nam
           | nothers?
           | nuff
+          | onou?rs?
           | re?
           | rithmetic
           | s
