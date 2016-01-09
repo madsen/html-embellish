@@ -42,6 +42,7 @@ my @tests = qw(
   '90s
   'ave
   'aves
+  'ay
   'cause
   'cept
   'd
@@ -88,6 +89,7 @@ my @tests = qw(
   'ud
   'un
   'uns
+  'y
 );
 
 plan tests => 1 + @tests;

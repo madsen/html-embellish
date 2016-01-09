@@ -29,7 +29,7 @@ use Exporter 5.57 'import';     # exported import method
 #=====================================================================
 # Package Global Variables:
 
-our $VERSION = '1.001';
+our $VERSION = '1.002';
 # This file is part of {{$dist}} {{$dist_version}} ({{$date}})
 
 our @EXPORT = qw(embellish);
@@ -135,6 +135,7 @@ sub processTextRefs
     s/'(?=
         (?: angmans?
           | aves?
+          | ay
           | cause
           | cept
           | d
@@ -160,6 +161,7 @@ sub processTextRefs
           | tw(?:asn?|ere?n?|ould\w*)
           | ud
           | uns?
+          | y
         ) \b
         | \d\d\W?s
         | \d\d(?!\w)

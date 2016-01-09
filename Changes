@@ -1,5 +1,8 @@
 Revision history for HTML::Embellish
 
+1.002  NOT
+	- Add 'ay & 'y as special cases
+
 1.001  2015-04-11
 	- Add 'angman, 'ave, 'igh, & 'onour as special cases
 
